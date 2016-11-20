@@ -113,15 +113,12 @@ public class Server {
                          * estou sem ideias
                          * vou lanchar
                          */
-                        System.out.println("before synchro: " + (counter < maxNrOfClients));
                         synchronized (this) {
                             counter++;
-                            notifyAll();
-                            if (counter < maxNrOfClients) {
+                            while (counter < maxNrOfClients) {
                                 System.out.println("counter: " + counter);
                                 wait();
-                                System.out.println("counter: " + counter);
-                                return;
+                                System.out.println("counter after wait: " + counter);
                             }
                         }
 
@@ -250,4 +247,10 @@ public class Server {
         return clientsList.remove(ip, clientSocket);
     }
 
+    void nameTyped() {
+
+        System.out.println("entrei no name typed");
+        notifyAll();
+        st
+    }
 }
