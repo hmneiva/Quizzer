@@ -31,15 +31,16 @@ public class Game {
             server.broadcast("\n" + (char) 27 + "[30;42;1m" + playerName + " as joined the game" + (char) 27 +
                     "[0m\nStill waiting for " + server.getNrOfMissingPlayers() + " players");
         } else {
-            server.broadcast("\n" + (char) 27 + "[30;42;1mStart the game" + (char) 27 + "[0m"); // TODO: 18/11/16 wait for player name
+            server.broadcast("\n" + (char) 27 + "[30;42;1mStart the game" + (char) 27 + "[0m");
             server.broadcast(printQuestion());
         }
     }
 
     public synchronized void gameFlow(String message, String playerName) {
 
+        boolean timeRunOut = false;
         try {
-            if (!message.equals(FinalVars.TIME_RUN_OUT)) {
+            if (!message.equals(FinalVars.TIME_RUN_OUT_STRING) && playerName.equals(FinalVars.TIME_RUN_OUT_STRING)) {
                 if (verifyAnswer(message)) {
                     System.out.println("if correct answer" + playerName);
                     server.broadcast(playerName + " won the round.\nCorrect answer: " + getCorrectAnswer());
@@ -56,8 +57,16 @@ public class Game {
                 server.actualizeScores("FinalVars.TIME_RUN_OUT", (-FinalVars.POINTS_FOR_ANSWER));
             }
             server.printScoreboard();
-            wait(2000);
+            wait(1000);
             server.broadcast(printQuestion());
+            wait(FinalVars.TIME_TO_ANSWER);
+            timeRunOut = true;
+            for (int i = 0; i < maxNrOfPlayers; i++) {
+                notifyAll();
+            }
+            if (timeRunOut) {
+                gameFlow(FinalVars.TIME_RUN_OUT_STRING, FinalVars.TIME_RUN_OUT_STRING);
+            }
         } catch (InterruptedException e) {
             e.getMessage();
             e.printStackTrace();

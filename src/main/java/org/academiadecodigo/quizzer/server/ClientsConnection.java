@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Created by Neiva on 10-11-2016.
  */
-public class ClientsConnection implements Runnable {
+class ClientsConnection implements Runnable {
 
     private Socket clientSocket;
     private PrintWriter out;
@@ -28,7 +28,6 @@ public class ClientsConnection implements Runnable {
     public void run() {
 
         String message;
-//        String waitingMessage = FinalVars.TIME_RUN_OUT;;
 
         try {
 
@@ -43,7 +42,7 @@ public class ClientsConnection implements Runnable {
             name = Thread.currentThread().getName();
             server.startGame(name);
 
-            while ((message = in.readLine()) != null) {// TODO: 20-11-2016 run out time!!!! 
+            while ((message = in.readLine()) != null) {
                 System.out.println(clientSocket.getLocalAddress().getHostName() + clientSocket.getInetAddress() +
                         " | " + Thread.currentThread().getName() + ": " + message);
                 server.receiveClientMessage(message, name);
@@ -52,7 +51,6 @@ public class ClientsConnection implements Runnable {
             e.getMessage();
             e.printStackTrace();
         } finally {
-            System.out.println(clientSocket.getInetAddress() + " ");
             try {
                 if (clientSocket != null) {
                     clientSocket.close();
@@ -71,23 +69,23 @@ public class ClientsConnection implements Runnable {
         }
     }
 
-    public void sendMessage(String message) {
+    void sendMessage(String message) {
 
         out.println(message);
         out.flush();
     }
 
-    public void setScore(int points) {
+    void setScore(int points) {
 
         score = score + points > 0 ? score + points : 0;
     }
 
-    public String getName() {
+    String getName() {
 
         return name;
     }
 
-    public int getScore() {
+    int getScore() {
 
         return score;
     }

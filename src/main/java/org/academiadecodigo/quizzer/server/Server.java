@@ -212,9 +212,6 @@ public class Server {
                 client.setScore(points);
                 return;
             }
-            if (playerName.equals(FinalVars.TIME_RUN_OUT)){
-                client.setScore(points);
-            }
         }
     }
 
