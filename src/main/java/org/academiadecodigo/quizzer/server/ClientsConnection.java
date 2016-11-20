@@ -36,6 +36,7 @@ class ClientsConnection implements Runnable {
             sendMessage("Type your name:");
 
             message = in.readLine();
+            server.nameTyped();
 
             String pNumber = Thread.currentThread().getName().substring(Thread.currentThread().getName().length() - 1);
             Thread.currentThread().setName("[Player " + pNumber + "] " + message);
