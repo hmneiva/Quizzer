@@ -195,12 +195,12 @@ public class Server {
         return maxNrOfClients - clientsList.size();
     }
 
-    public void startGame(String clientName) {
+    void startGame(String clientName) {
 
         game.startGame(clientName);
     }
 
-    public void receiveClientMessage(String message, String playerName) {
+    void receiveClientMessage(String message, String playerName) {
 
         game.gameFlow(message, playerName);
     }
@@ -222,7 +222,7 @@ public class Server {
 
         String scoreBoard = "";
         for (ClientsConnection client : clientsList.values()) {
-            scoreBoard += client.getName() + "| Score: " + client.getScore() + "\t";
+            scoreBoard += client.getName() + " | Score: " + client.getScore() + "\t";
         }
         broadcast(scoreBoard);
     }
