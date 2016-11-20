@@ -96,26 +96,47 @@ public class Server {
 
         try {
             ServerSocket serverSocket = new ServerSocket(portNumber);
-
+            int counter = 0;
             while (true) {
-
                 clientSocket = serverSocket.accept();
-                System.out.println("dentro do accept");
 
                 if (clientsList.size() < maxNrOfClients && !clientsList.containsKey(clientSocket.getInetAddress())) { // TODO: 18/11/16 build 2 server jars - LAN and WAN
                     clientsConnection = new ClientsConnection(clientSocket, this);
                     clientsList.put(clientSocket.getInetAddress(), clientsConnection);
                     System.out.println(clientSocket + " connected!\nTotal: " + clientsList.size());
                     pool.submit(clientsConnection);
+                    try {
+
+                        /**
+                         * todo synchro não funciona
+                         * fica em wait infinito
+                         * estou sem ideias
+                         * vou lanchar
+                         */
+                        System.out.println("before synchro: " + (counter < maxNrOfClients));
+                        synchronized (this) {
+                            counter++;
+                            notifyAll();
+                            if (counter < maxNrOfClients) {
+                                System.out.println("counter: " + counter);
+                                wait();
+                                System.out.println("counter: " + counter);
+                                return;
+                            }
+                        }
+
+                        //SYNCHRO ATÉ AQUI!!!!!!
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("sai do wait");
                     continue;
                 }
                 rejectClient(clientSocket);
             }
-
         } catch (IOException e) {
             e.getMessage();
             e.printStackTrace();
-
         } finally {
             try {
                 if (clientSocket != null) {

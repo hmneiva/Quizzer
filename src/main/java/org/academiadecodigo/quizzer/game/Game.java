@@ -13,7 +13,7 @@ public class Game {
     private QuestionHandler handler;
     private Server server;
     private int maxNrOfPlayers;
-
+    private boolean questionAnswered;
 
     public Game(Server server, int maxNrOfPlayers) {
         this.server = server;
@@ -38,7 +38,14 @@ public class Game {
 
     public synchronized void gameFlow(String message, String playerName) {
 
-        boolean timeRunOut = false;
+        boolean timeRunOut;
+        /**
+         * todo testar se esta porra do resposta dada funciona
+         */
+        if (questionAnswered) {
+            return;
+        }
+        questionAnswered = true;
         try {
             if (!message.equals(FinalVars.TIME_RUN_OUT_STRING) && playerName.equals(FinalVars.TIME_RUN_OUT_STRING)) {
                 if (verifyAnswer(message)) {
@@ -56,17 +63,22 @@ public class Game {
                 server.broadcast("Time Out!!! Correct answer: " + getCorrectAnswer());
                 server.actualizeScores("FinalVars.TIME_RUN_OUT", (-FinalVars.POINTS_FOR_ANSWER));
             }
+            questionAnswered = false;
             server.printScoreboard();
             wait(1000);
             server.broadcast(printQuestion());
+
+            /**
+             * todo timeout não funca.
+             * penso que terá que ver com a condição
+             */
+/*            timeRunOut = true;
             wait(FinalVars.TIME_TO_ANSWER);
-            timeRunOut = true;
-            for (int i = 0; i < maxNrOfPlayers; i++) {
-                notifyAll();
-            }
+            notifyAll();
             if (timeRunOut) {
                 gameFlow(FinalVars.TIME_RUN_OUT_STRING, FinalVars.TIME_RUN_OUT_STRING);
-            }
+                return;
+            }*/
         } catch (InterruptedException e) {
             e.getMessage();
             e.printStackTrace();
