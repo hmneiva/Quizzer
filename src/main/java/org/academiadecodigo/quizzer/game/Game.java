@@ -42,12 +42,12 @@ public class Game {
         /**
          * todo testar se esta porra do resposta dada funciona
          */
-        if (questionAnswered) {
-            return;
-        }
+
+        System.out.println("alguém respondeu: " + questionAnswered);
+
         questionAnswered = true;
         try {
-            if (!message.equals(FinalVars.TIME_RUN_OUT_STRING) && playerName.equals(FinalVars.TIME_RUN_OUT_STRING)) {
+            if (!message.equals(FinalVars.TIME_RUN_OUT_STRING) && !playerName.equals(FinalVars.TIME_RUN_OUT_STRING)) {
                 if (verifyAnswer(message)) {
                     System.out.println("if correct answer" + playerName);
                     server.broadcast(playerName + " won the round.\nCorrect answer: " + getCorrectAnswer());
@@ -63,9 +63,9 @@ public class Game {
                 server.broadcast("Time Out!!! Correct answer: " + getCorrectAnswer());
                 server.actualizeScores("FinalVars.TIME_RUN_OUT", (-FinalVars.POINTS_FOR_ANSWER));
             }
-            questionAnswered = false;
             server.printScoreboard();
             wait(1000);
+            questionAnswered = false;
             server.broadcast(printQuestion());
 
             /**
@@ -83,6 +83,8 @@ public class Game {
             e.getMessage();
             e.printStackTrace();
         }
+        System.out.println("alguém respondeu fim método: " + questionAnswered);
+
     }
 
     /**
@@ -143,5 +145,10 @@ public class Game {
     public int getMaxNrOfPlayers() {
 
         return maxNrOfPlayers;
+    }
+
+    public boolean isQuestionAnswered() {
+
+        return questionAnswered;
     }
 }

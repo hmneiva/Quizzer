@@ -96,7 +96,7 @@ public class Server {
 
         try {
             ServerSocket serverSocket = new ServerSocket(portNumber);
-            int counter = 0;
+            //int counter = 0;
             while (true) {
                 clientSocket = serverSocket.accept();
 
@@ -105,14 +105,17 @@ public class Server {
                     clientsList.put(clientSocket.getInetAddress(), clientsConnection);
                     System.out.println(clientSocket + " connected!\nTotal: " + clientsList.size());
                     pool.submit(clientsConnection);
+/*
                     try {
 
-                        /**
-                         * todo synchro não funciona
-                         * fica em wait infinito
-                         * estou sem ideias
-                         * vou lanchar
-                         */
+                        */
+/**
+ * todo synchro não funciona
+ * fica em wait infinito
+ * estou sem ideias
+ * vou lanchar
+ *//*
+
                         synchronized (this) {
                             counter++;
                             while (counter < maxNrOfClients) {
@@ -127,6 +130,7 @@ public class Server {
                         e.printStackTrace();
                     }
                     System.out.println("saí do wait");
+*/
                     continue;
                 }
                 rejectClient(clientSocket);
@@ -218,9 +222,10 @@ public class Server {
         game.startGame(clientName);
     }
 
-    void receiveClientMessage(String message, String playerName) {
-
-        game.gameFlow(message, playerName);
+    synchronized void receiveClientMessage(String message, String playerName) {
+        if (!game.isQuestionAnswered()) {
+            game.gameFlow(message, playerName);
+        }
     }
 
     public void actualizeScores(String playerName, int points) {
